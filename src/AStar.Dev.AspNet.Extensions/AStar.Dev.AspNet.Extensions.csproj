@@ -30,7 +30,7 @@
 
     <ItemGroup>
         <PackageReference Include="AStar.Dev.Usage.Api.Client.SDK" Version="0.1.1"/>
-        <PackageReference Include="AStar.Dev.Logging.Extensions" Version="0.5.2"/>
+        <PackageReference Include="AStar.Dev.Logging.Extensions" Version="0.6.0"/>
         <PackageReference Include="AStar.Dev.Api.HealthChecks" Version="0.4.0"/>
         <PackageReference Include="AStar.Dev.Technical.Debt.Reporting" Version="0.1.0"/>
         <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0"/>
