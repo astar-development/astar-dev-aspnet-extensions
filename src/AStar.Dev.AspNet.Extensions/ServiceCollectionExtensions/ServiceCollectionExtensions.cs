@@ -1,11 +1,10 @@
 ﻿using System.Net;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using AStar.Dev.Api.Usage.Sdk;
 using AStar.Dev.AspNet.Extensions.Handlers;
 using AStar.Dev.AspNet.Extensions.Swagger;
-using AStar.Dev.Logging.Extensions;
 using AStar.Dev.Technical.Debt.Reporting;
-using AStar.Dev.Usage.Api.Client.SDK;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -20,7 +19,7 @@ namespace AStar.Dev.AspNet.Extensions.ServiceCollectionExtensions;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
-    private static ApiUsageConfiguration ApiUsageConfiguration { get; set; } = new() { UserName = "NotSet", Password = "NotSet", HostName = "NotSet", QueueName = "NotSet" };
+    private static ApiUsageConfiguration ApiUsageConfiguration { get; set; } = new() { UserName = "NotSet", Password = string.Empty, HostName = "NotSet", QueueName = "NotSet" };
 
     /// <summary>
     ///     The <see cref="ConfigureUi" /> will do exactly what it says on the tin...this time around, this is for the UI
@@ -59,6 +58,7 @@ public static class ServiceCollectionExtensions
     /// <seealso href="ConfigureUi">
     /// </seealso>
     [Refactor(1, 1, "too long a method")]
+#pragma warning disable CA1506 // Class coupling is too high
     public static IServiceCollection AddApiConfiguration(this IServiceCollection services, ConfigurationManager configurationManager)
     {
         _ = services
@@ -66,44 +66,42 @@ public static class ServiceCollectionExtensions
             .Bind(configurationManager.GetSection(ApiUsageConfiguration.ConfigurationSectionName));
 
         ApiUsageConfiguration = services.BuildServiceProvider().GetRequiredService<IOptions<ApiUsageConfiguration>>().Value;
-        services.AddProblemDetails();
+        _ = services.AddProblemDetails();
         services.CreateValidatedApiConfiguration(configurationManager);
-        services.AddEndpointsApiExplorer();
-        services.AddHealthChecks();
-        services.AddExceptionHandler<GlobalExceptionHandler>();
+        _ = services.AddEndpointsApiExplorer();
+        _ = services.AddHealthChecks();
+        _ = services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        services.AddApiVersioning(options =>
+        _ = services.AddApiVersioning(options =>
                                   {
                                       options.UnsupportedApiVersionStatusCode = (int)HttpStatusCode.NotImplemented;
-                                      options.ReportApiVersions               = true;
-                                      options.ApiVersionReader                = new QueryStringApiVersionReader("version");
+                                      options.ReportApiVersions = true;
+                                      options.ApiVersionReader = new QueryStringApiVersionReader("version");
                                   })
                 .AddApiExplorer(options =>
                                 {
-                                    options.GroupNameFormat           = "'v'VVV";
+                                    options.GroupNameFormat = "'v'VVV";
                                     options.SubstituteApiVersionInUrl = true;
                                 })
                 .EnableApiVersionBinding();
 
-        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-        services.AddScoped(typeof(ILoggerAstar<>), typeof(AStarLogger<>));
+        _ = services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        _ = services.AddControllers().AddJsonOptions(jsonoptions => jsonoptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-        services.AddControllers().AddJsonOptions(jsonoptions => { jsonoptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
-
-        services.AddSwaggerGen(options =>
+        _ = services.AddSwaggerGen(options =>
                                {
                                    options.AddSecurityDefinition("Bearer", new()
-                                                                           {
-                                                                               Description = """
+                                   {
+                                       Description = """
                                                                                              JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                                                                                                                   Enter 'just' your token in the text input below.
-                                                                                                                   \r\n\r\nExample: '12345etc'
+                                                                                               Enter 'just' your token in the text input below.
+                                                                                               \r\n\r\nExample: '12345etc'
                                                                                              """,
-                                                                               Name   = "Authorization",
-                                                                               In     = ParameterLocation.Header,
-                                                                               Type   = SecuritySchemeType.Http,
-                                                                               Scheme = "Bearer"
-                                                                           });
+                                       Name = "Authorization",
+                                       In = ParameterLocation.Header,
+                                       Type = SecuritySchemeType.Http,
+                                       Scheme = "Bearer"
+                                   });
 
                                    options.AddSecurityRequirement(new()
                                                                   {
@@ -124,12 +122,12 @@ public static class ServiceCollectionExtensions
     }
 
     private static void CreateValidatedApiConfiguration(this IServiceCollection services,
-                                                        ConfigurationManager    configurationManager)
-    {
+                                                        ConfigurationManager configurationManager) =>
         services
             .AddOptions<ApiConfiguration>()
             .Bind(configurationManager.GetSection(ApiConfiguration.ConfigurationSectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();
-    }
 }
+
+#pragma warning restore CA1506 // Class coupling is too high

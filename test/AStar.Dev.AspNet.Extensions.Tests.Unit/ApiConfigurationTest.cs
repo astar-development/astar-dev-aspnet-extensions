@@ -8,9 +8,7 @@ public sealed class ApiConfigurationTest
 {
     [Fact]
     public void ContainTheConfigurationSectionNameWithTheExpectedValue()
-    {
-        ApiConfiguration.ConfigurationSectionName.ShouldBe("ApiConfiguration");
-    }
+        => ApiConfiguration.ConfigurationSectionName.ShouldBe("ApiConfiguration");
 
     [Fact]
     public void ContainTheOpenApiInfoPropertyWithTheExpectedDefaultValue()

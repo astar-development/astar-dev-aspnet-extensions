@@ -1,60 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AnalysisLevel>latest-recommended</AnalysisLevel>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+		<AnalysisLevel>latest-recommended</AnalysisLevel>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <Authors>AStar Development, Jason Barden</Authors>
         <Company>AStar Development</Company>
         <Copyright>AStar Development, 2025</Copyright>
-        <Description>A collection of AspNet Extensions</Description>
+        <Description>A collection of utility methods for simplifying the ASPNet Configuration.</Description>
         <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <IncludeSymbols>True</IncludeSymbols>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
         <IsPackable>true</IsPackable>
-        <Nullable>enable</Nullable>
-        <PackageIcon>AStar.png</PackageIcon>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageIcon>astar.png</PackageIcon>
+        <PackageId>AStar.Dev.AspNet.Extensions</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/astar-development/astar-dev-aspnet-extensions</PackageProjectUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
-        <PackageReleaseNotes>Version 0.7.30 - remove the sunset policies frpm AppSettings - currently, it is ignored.</PackageReleaseNotes>
-        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageReleaseNotes>Bug fix in GlobalExceptionHandler.</PackageReleaseNotes>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageTags>ASPNet Extensions</PackageTags>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/astar-development/astar-dev-aspnet-extensions.git</RepositoryUrl>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <TargetFramework>net9.0</TargetFramework>
-        <Title>AStar Dev AspNet Extensions</Title>
-        <Version>0.8.0</Version>
+        <Title>AStar.Dev.AspNet.Extensions</Title>
+        <Version>0.8.2</Version>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AStar.Dev.Usage.Api.Client.SDK" Version="0.1.1"/>
-        <PackageReference Include="AStar.Dev.Logging.Extensions" Version="0.5.2"/>
-        <PackageReference Include="AStar.Dev.Api.HealthChecks" Version="0.4.0"/>
-        <PackageReference Include="AStar.Dev.Technical.Debt.Reporting" Version="0.1.0"/>
-        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0"/>
-        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4"/>
-        <PackageReference Include="Serilog" Version="4.2.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1"/>
+        <None Include="LICENSE" Pack="true" PackagePath=""/>
+        <None Include="Readme.md" Pack="true" PackagePath=""/>
+        <None Include="astar.png" Pack="true" PackagePath=""/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\AStar.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\Readme.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
+        <PackageReference Include="AStar.Dev.Utilities" Version="1.6.2"/>
+        <PackageReference Include="AStar.Dev.Api.HealthChecks" Version="0.4.3"/>
+        <PackageReference Include="AStar.Dev.Api.Usage.Sdk" Version="0.1.0"/>
+        <PackageReference Include="AStar.Dev.Technical.Debt.Reporting" Version="0.2.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0"/>
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0"/>
+
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8"/>
+        <PackageReference Include="Serilog" Version="4.3.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.3"/>
     </ItemGroup>
 
     <ItemGroup>

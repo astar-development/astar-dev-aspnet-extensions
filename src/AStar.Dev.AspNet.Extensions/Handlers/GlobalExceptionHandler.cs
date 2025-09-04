@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using AStar.Dev.Logging.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace AStar.Dev.AspNet.Extensions.Handlers;
 
@@ -14,7 +14,7 @@ namespace AStar.Dev.AspNet.Extensions.Handlers;
 /// <param name="logger">
 ///     An instance of <see href="ILogger"></see> used to log the error.
 /// </param>
-public sealed class GlobalExceptionHandler(ILoggerAstar<GlobalExceptionHandler> logger) : IExceptionHandler
+public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     /// <summary>
     ///     The TryHandleAsync as defined by the <see cref="IExceptionHandler" /> interface.
@@ -38,7 +38,11 @@ public sealed class GlobalExceptionHandler(ILoggerAstar<GlobalExceptionHandler> 
     {
         try
         {
-            logger.LogException(exception);
+#pragma warning disable CA1848 // Use the LoggerMessage delegates
+
+            logger.LogError(exception, "An error occurred while processing a request. The message is: {Message}",
+                            exception.Message);
+#pragma warning restore CA1848 // Use the LoggerMessage delegates
 
             const string detailMessage =
                 "We are sorry, but our server encountered an error. This has been logged and our support team will resolve as quickly as possible. If you wish to contact the support team, please quote the traceId listed below. Thank you for your patience. AStar Development.";

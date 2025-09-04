@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
 namespace AStar.Dev.AspNet.Extensions.RootEndpoint;
@@ -19,8 +18,6 @@ public static class RootEndpointConfiguration
     {
         _ = app.MapGet("/", async context =>
                             {
-                                Console.WriteLine("test Console");
-                                Debug.WriteLine("test Debug");
                                 context.Response.ContentType = "text/html";
                                 await context.Response.WriteAsync(RootPage(apiOrApplicationName));
                             });
