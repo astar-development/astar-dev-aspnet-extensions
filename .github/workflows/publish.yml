@@ -1,0 +1,32 @@
+name: 🚀 Publish NuGet Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: 🧾 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🛠 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: 🔍 Restore dependencies
+        run: dotnet restore
+
+      - name: 🛠 Build solution
+        run: dotnet build --configuration Release
+
+      - name: 📦 Pack NuGet package for ${{ github.event.repository.name }}
+        run: dotnet pack ./src/**/*.csproj --configuration Release --output ./nupkg
+
+      - name: 🚀 Publish to NuGet.org
+        run: dotnet nuget push ./nupkg/*.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NuGet_API_Key }} #
+

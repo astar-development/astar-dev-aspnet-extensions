@@ -23,33 +23,38 @@ public static class PipelineExtensions
     /// </returns>
     public static WebApplication UseApiServices(this WebApplication app, bool enableSwaggerDarkMode = true)
     {
-        app.UseExceptionHandler();
-        app.ConfigureHealthCheckEndpoints().UseSwagger();
+        _ = app.UseExceptionHandler();
+        _ = app.ConfigureHealthCheckEndpoints().UseSwagger();
 
-        if (enableSwaggerDarkMode) app.UseStaticFiles();
+        if(enableSwaggerDarkMode)
+        {
+            _ = app.UseStaticFiles();
+        }
 
-        app.UseSwaggerUI(SetupAction(app, enableSwaggerDarkMode))
-           .UseAuthentication()
-           .UseAuthorization();
+        _ = app.UseSwaggerUI(SetupAction(app, enableSwaggerDarkMode));
+
+// .UseAuthentication()
+        //         .UseAuthorization();
 
         return app;
     }
 
     private static Action<SwaggerUIOptions> SetupAction(WebApplication webApplication,
-                                                        bool           enableSwaggerDarkMode = true)
-    {
-        return options =>
-               {
-                   var descriptions = webApplication.DescribeApiVersions();
+                                                        bool           enableSwaggerDarkMode = true) =>
+        options =>
+        {
+            var descriptions = webApplication.DescribeApiVersions();
 
-                   foreach (var description in descriptions)
-                   {
-                       var url  = $"/swagger/{description.GroupName}/swagger.json";
-                       var name = description.GroupName.ToUpperInvariant();
-                       options.SwaggerEndpoint(url, name);
+            foreach(var groupName in descriptions.Select(description => description.GroupName))
+            {
+                var url  = $"/swagger/{groupName}/swagger.json";
+                var name = groupName.ToUpperInvariant();
+                options.SwaggerEndpoint(url, name);
 
-                       if (enableSwaggerDarkMode) options.InjectStylesheet("/swagger-ui/SwaggerDark.css");
-                   }
-               };
-    }
+                if(enableSwaggerDarkMode)
+                {
+                    options.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+                }
+            }
+        };
 }

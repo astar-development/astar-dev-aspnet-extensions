@@ -20,13 +20,11 @@ public static class ConfigurationManagerExtensions
     /// <returns>The original <see cref="IConfigurationManager" /> to facilitate further call chaining</returns>
     public static T? GetValidatedConfigurationSection<T>(this IConfigurationManager configuration,
                                                          string                     configurationSectionKey)
-        where T : class, new()
-    {
-        return new ServiceCollection()
-               .AddOptions()
-               .Configure<T>(configuration.GetSection(configurationSectionKey))
-               .BuildServiceProvider()
-               .GetService<IOptions<T>>()?
-               .Value;
-    }
+        where T : class, new() =>
+        new ServiceCollection()
+            .AddOptions()
+            .Configure<T>(configuration.GetSection(configurationSectionKey))
+            .BuildServiceProvider()
+            .GetService<IOptions<T>>()?
+            .Value;
 }
